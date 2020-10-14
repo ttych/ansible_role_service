@@ -1,0 +1,7 @@
+---
+
+- name: add service logrotate.d to logrotate.conf
+  lineinfile:
+    path: "{{ logrotate_conf }}"
+    regexp: "^include {{ service_logrotate_d }}"
+    line: "include {{ service_logrotate_d }}"

@@ -1,0 +1,8 @@
+---
+
+- name: configure newsyslog for service
+  lineinfile:
+    path: "{{ newsyslog_conf_file }}"
+    regexp: "^<include> {{ service_newsyslog_dir }}/"
+    line: "<include> {{ service_newsyslog_dir }}/*"
+  when: ansible_distribution == 'FreeBSD'

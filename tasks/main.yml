@@ -1,2 +1,16 @@
 ---
-# tasks file for ansible_role_service
+
+- block:
+    - include_tasks: context.yml
+
+    - include_tasks: service_directory_structure.yml
+
+    - include_tasks: service_logrotate.yml
+
+    - include_tasks: service_newsyslog.yml
+
+  when: want_service
+
+- name: set has_service
+  set_fact:
+    has_services: "{{ want_service }}"
