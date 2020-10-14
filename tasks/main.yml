@@ -13,4 +13,4 @@
 
 - name: set has_service
   set_fact:
-    has_services: "{{ want_service }}"
+    has_service: "{{ want_service }}"
