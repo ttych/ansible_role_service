@@ -4,5 +4,5 @@
   lineinfile:
     path: "{{ newsyslog_conf_file }}"
     regexp: "^<include> {{ service_newsyslog_dir }}/"
-    line: "<include> {{ service_newsyslog_dir }}/*"
+    line: "<include> {{ service_newsyslog_dir }}/[!.]*.conf"
   when: ansible_distribution == 'FreeBSD'
