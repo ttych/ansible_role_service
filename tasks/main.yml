@@ -3,6 +3,8 @@
 - block:
     - include_tasks: context.yml
 
+    - include_tasks: service_root.yml
+
     - include_tasks: service_directory_structure.yml
 
     - include_tasks: service_logrotate.yml

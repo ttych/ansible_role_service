@@ -1,10 +1,21 @@
 ---
 
-want_service: true
+want_service: yes
 
 service_dir: /service
 
 root_group: root
+
+service_zfs_parent: zdata
+service_zfs_try: yes
+service_zfs_dataset_properties:
+  setuid: off
+  compression: "lz4"
+  sharenfs: off
+  sharesmb: off
+  atime: off
+  relatime: off
+
 
 service_user: service
 service_group: service
@@ -18,10 +29,10 @@ service_log_dir: "{{ service_dir }}/log"
 service_run_dir: "{{ service_dir }}/run"
 
 service_directories:
-  - { path: "{{ service_dir }}", owner: root, group: "{{ root_group }}", mode: "0755" }
-  - { path: "{{ service_etc_dir }}", owner: root, group: "{{ service_group }}", mode: "0755" }
-  - { path: "{{ service_logrotate_d }}", owner: root, group: "{{ service_group }}", mode: "0755" }
-  - { path: "{{ service_log_dir }}", owner: root, group: "{{ service_group }}", mode: "0775" }
-  - { path: "{{ service_run_dir }}", owner: root, group: "{{ service_group }}", mode: "0775" }
+  - { path: "{{ service_dir }}", owner: root, group: "{{ root_group }}", mode: "0751" }
+  - { path: "{{ service_etc_dir }}", owner: root, group: "{{ service_group }}", mode: "0751" }
+  - { path: "{{ service_logrotate_d }}", owner: root, group: "{{ service_group }}", mode: "0751" }
+  - { path: "{{ service_log_dir }}", owner: root, group: "{{ service_group }}", mode: "0751" }
+  - { path: "{{ service_run_dir }}", owner: root, group: "{{ service_group }}", mode: "0751" }
 
 logrotate_conf: /etc/logrotate.conf

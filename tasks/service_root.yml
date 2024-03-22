@@ -1,0 +1,35 @@
+---
+
+- name: service directory status
+  stat:
+    path: "{{ service_dir }}"
+  register: t_service_stat
+
+- name: service directory zfs status
+  shell: zfs list -H "{{ service_dir }}" | awk '{print $1}'
+  register: t_service_zfs_stat
+  changed_when: no
+
+- name: service parent directory zfs status
+  shell: zfs list -H "{{ service_zfs_parent }}" | awk '{print $1}'
+  register: t_service_zfs_parent_stat
+  changed_when: no
+
+
+- fail:
+    msg: "issue with /service mountpoint"
+  when:
+    - service_zfs_try
+    - t_service_zfs_stat.rc != 0 or t_service_zfs_stat.stdout == "" or t_service_zfs_parent_stat.rc != 0 or t_service_zfs_parent_stat.stdout == ""
+
+
+- block:
+    - name: "create dataset for {{ service_dir }}"
+      zfs:
+        name: "{{ (t_service_zfs_stat.rc == 0) | ternary(t_service_zfs_stat.stdout, service_zfs_parent + '/service') }}"
+        state: present
+        extra_zfs_properties: "{{ service_zfs_dataset_properties | combine({ 'mountpoint': service_dir }) }}"
+
+  when:
+    - service_zfs_try
+    - (t_service_zfs_stat.rc == 0 and t_service_zfs_stat.stdout != "") or (t_service_zfs_parent_stat.rc == 0 and t_service_zfs_parent_stat.stdout != "")
