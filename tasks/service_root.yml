@@ -20,13 +20,14 @@
     msg: "issue with /service mountpoint"
   when:
     - service_zfs_try
-    - t_service_zfs_stat.rc != 0 or t_service_zfs_stat.stdout == "" or t_service_zfs_parent_stat.rc != 0 or t_service_zfs_parent_stat.stdout == ""
+    - t_service_zfs_stat.rc != 0 and t_service_zfs_stat.stdout == "" and t_service_zfs_parent_stat.rc != 0 and t_service_zfs_parent_stat.stdout == ""
 
 
 - block:
+
     - name: "create dataset for {{ service_dir }}"
       zfs:
-        name: "{{ (t_service_zfs_stat.rc == 0) | ternary(t_service_zfs_stat.stdout, service_zfs_parent + '/service') }}"
+        name: "{{ (t_service_zfs_stat.rc == 0 and t_service_zfs_stat.stdout != '') | ternary(t_service_zfs_stat.stdout, service_zfs_parent + '/service') }}"
         state: present
         extra_zfs_properties: "{{ service_zfs_dataset_properties | combine({ 'mountpoint': service_dir }) }}"
 
